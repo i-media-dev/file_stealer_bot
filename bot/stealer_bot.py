@@ -1,12 +1,12 @@
 import logging
-from pathlib import Path
-import uuid
 import threading
+import uuid
+from pathlib import Path
 
-from bot.logging_config import setup_logging
 from telebot import TeleBot
 
 from bot.constants import FOLDER_NAME
+from bot.logging_config import setup_logging
 
 setup_logging()
 
@@ -47,7 +47,6 @@ class FileStealer:
         """Защищенный метод, создает директорию."""
         try:
             file_path = Path(__file__).parent.parent / folder_name
-            logging.debug('Путь к файлу: %s', file_path)
             file_path.mkdir(parents=True, exist_ok=True)
             return file_path
         except Exception as error:
