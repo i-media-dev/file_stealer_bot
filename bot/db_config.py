@@ -28,7 +28,5 @@ config = {
     'host': os.getenv('DB_HOST_CARMONEY'),
     'database': os.getenv('DB_NAME_CARMONEY'),
     'port': os.getenv('DB_PORT_CARMONEY', 6432),
-    'connection_timeout': 10,
-    'read_timeout': 60,
-    'use_pure': True
+    'connect_timeout': 10
 }

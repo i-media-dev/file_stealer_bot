@@ -5,8 +5,6 @@ import time
 from datetime import datetime as dt
 
 import psycopg2
-import psycopg2.errorcodes
-import requests
 from psycopg2 import InterfaceError, OperationalError
 
 from bot.constants import DATE_FORMAT, MAX_RETRIES, TIME_DELAY, TIME_FORMAT

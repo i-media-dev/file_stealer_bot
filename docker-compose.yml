@@ -1,0 +1,10 @@
+services:
+  file_stealer_bot:
+    environment:
+      - TZ=Europe/Moscow
+    image: imediadev/file_stealer_bot
+    user: "1002:1002"
+    env_file: .env
+    volumes:
+      - ./logs:/app/logs
+      - ./${FOLDER_NAME}:/app/${FOLDER_NAME}
