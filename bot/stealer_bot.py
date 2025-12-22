@@ -1,11 +1,12 @@
 import logging
+import random
 import threading
 from pathlib import Path
 
 import pandas as pd
 from telebot import TeleBot
 
-from bot.constants import FOLDER_NAME
+from bot.constants import FOLDER_NAME, ROBOTS
 from bot.logging_config import setup_logging
 
 setup_logging()
@@ -47,6 +48,15 @@ class FileStealer:
                 encoding='utf-8',
             )
             logging.info('файл сохранен: %s', filename)
+            random_robot = random.choice(ROBOTS)
+            self._get_robot(random_robot, self.chat_id)
+
+    def _get_robot(self, robot, chat_id, robot_folder='robot'):
+        try:
+            with open(f'{robot_folder}/{robot}', 'rb') as photo:
+                self.bot.send_sticker(chat_id, photo)
+        except FileNotFoundError:
+            logging.warning('Робот %s не найден', robot)
 
     def _make_dir(self, folder_name: str) -> Path:
         """Защищенный метод, создает директорию."""

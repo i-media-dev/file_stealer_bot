@@ -4,6 +4,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+LIFETIME = 7200
+"""Продолжительность жизни бота в секундах (2 часа)."""
+
+ROBOTS = [
+    'catcher-robot.png',
+    'chang-robot.png',
+    'cleaner-robot.png',
+    'harry-robot.png'
+]
 
 FOLDER_NAME = os.getenv('FOLDER_NAME', 'files')
 """Директория для сохранения скачанных файлов."""
