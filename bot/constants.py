@@ -29,7 +29,7 @@ TIME_DELAY = 5
 MAX_RETRIES = 5
 """Максимальное количество переподключений к бд."""
 
-TABLE_NAME = 'carmoney_bot_crm_test'
+TABLE_NAME = 'carmoney_bot_crm'
 """Название модели бд по умолчанию."""
 
 CREATE_REPORTS_TABLE = '''
