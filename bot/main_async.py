@@ -9,12 +9,13 @@ from bot.stealer_client import FileStealerClient
 async def main():
     token = TOKEN_TELEGRAM
     stealer = FileStealerClient(
+        token,
         api_id=API_ID,
         api_hash=API_HASH,
         group_id=GROUP_ID,
         folder_name='downloads',
     )
-    await stealer.run(30)
+    await stealer.run(LIFETIME)
     parser_client = FileParser()
     data = parser_client.parse_file()
 

