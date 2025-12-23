@@ -6,7 +6,7 @@ from pathlib import Path
 from telebot import TeleBot
 from telethon import TelegramClient, events
 
-from bot.constants import ROBOTS
+from bot.constants import FOLDER_NAME, ROBOTS
 from bot.logging_config import setup_logging
 
 setup_logging()
@@ -20,7 +20,7 @@ class FileStealerClient:
         api_id: int,
         api_hash: str,
         group_id: int,
-        folder_name: str = 'files',
+        folder_name: str = FOLDER_NAME,
     ):
         self.bot = TeleBot(token)
         self.group_id = group_id

@@ -13,7 +13,6 @@ async def main():
         api_id=API_ID,
         api_hash=API_HASH,
         group_id=GROUP_ID,
-        folder_name='downloads',
     )
     await stealer.run(LIFETIME)
     parser_client = FileParser()
