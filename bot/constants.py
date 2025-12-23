@@ -17,6 +17,16 @@ ROBOTS = [
 FOLDER_NAME = os.getenv('FOLDER_NAME', 'files')
 """Директория для сохранения скачанных файлов."""
 
+TOKEN_TELEGRAM = os.getenv('TOKEN_TELEGRAM')
+
+API_ID = int(os.getenv('TG_API_ID'))
+
+API_HASH = os.getenv('TG_API_HASH')
+
+GROUP_ID = int(os.getenv('TG_GROUP_ID'))
+
+LIFETIME = os.getenv('LIFETIME_SECONDS', 300)
+
 DATE_FORMAT = '%Y-%m-%d'
 """Формат даты по умолчанию."""
 

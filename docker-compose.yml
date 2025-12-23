@@ -8,3 +8,4 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./${FOLDER_NAME}:/app/${FOLDER_NAME}
+      - ./sessions:/app/sessions

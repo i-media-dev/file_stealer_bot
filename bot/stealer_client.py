@@ -1,0 +1,78 @@
+import asyncio
+import logging
+import random
+from pathlib import Path
+
+from telebot import TeleBot
+from telethon import TelegramClient, events
+
+from bot.constants import ROBOTS
+from bot.logging_config import setup_logging
+
+setup_logging()
+
+
+class FileStealerClient:
+
+    def __init__(
+        self,
+        token: str,
+        api_id: int,
+        api_hash: str,
+        group_id: int,
+        folder_name: str = 'files',
+    ):
+        self.bot = TeleBot(token)
+        self.group_id = group_id
+        self.folder_name = folder_name
+        self.client = TelegramClient(
+            'sessions/stealer_session',
+            api_id,
+            api_hash,
+        )
+
+        self._setup_handlers()
+
+    def _setup_handlers(self):
+        @self.client.on(events.NewMessage(chats=self.group_id))
+        async def handle_message(event):
+            if event.document:
+                sender = await event.get_sender()
+                logging.info('Документ от %s', sender.username)
+                folder = self._make_dir(self.folder_name)
+                await event.download_media(file=folder)
+                logging.info('Файл скачан')
+                random_robot = random.choice(ROBOTS)
+                self._get_robot(random_robot, self.group_id)
+                await self.client.disconnect()
+
+    def _get_robot(self, robot, chat_id, robot_folder='robot'):
+        try:
+            with open(f'{robot_folder}/{robot}', 'rb') as photo:
+                self.bot.send_sticker(chat_id, photo)
+        except FileNotFoundError:
+            logging.warning('Робот %s не найден', robot)
+
+    def _make_dir(self, folder_name: str) -> Path:
+        path = Path(folder_name)
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
+    async def run(self, lifetime_seconds: int):
+        await self.client.start()
+        logging.info(
+            'Telethon клиент запущен. Допустимое время ожидания файла %s сек.',
+            lifetime_seconds
+        )
+
+        async def timeout():
+            await asyncio.sleep(lifetime_seconds)
+            if self.client.is_connected():
+                logging.info(
+                    'Таймаут %s секунд, файл не пришел',
+                    lifetime_seconds
+                )
+                await self.client.disconnect()
+        asyncio.create_task(timeout())
+        await self.client.run_until_disconnected()
+        logging.info('Клиент остановлен')
