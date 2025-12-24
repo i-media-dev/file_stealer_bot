@@ -4,9 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-LIFETIME = 7200
-"""Продолжительность жизни бота в секундах (2 часа)."""
-
 ROBOTS = [
     'catcher-robot.png',
     'chang-robot.png',

@@ -36,6 +36,9 @@ class FileStealerClient:
     def _setup_handlers(self):
         @self.client.on(events.NewMessage(chats=self.group_id))
         async def handle_message(event):
+            logging.info('Получено сообщение в чате %s', event.chat_id)
+            logging.info('Тип: %s', event.message.media)
+            logging.info('От: %s', event.sender_id)
             if event.document:
                 sender = await event.get_sender()
                 logging.info('Документ от %s', sender.username)
