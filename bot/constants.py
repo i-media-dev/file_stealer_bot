@@ -22,7 +22,7 @@ API_HASH = os.getenv('TG_API_HASH')
 
 GROUP_ID = int(os.getenv('TG_GROUP_ID'))
 
-LIFETIME = os.getenv('LIFETIME_SECONDS', 300)
+LIFETIME = int(os.getenv('LIFETIME_SECONDS', 300))
 
 DATE_FORMAT = '%Y-%m-%d'
 """Формат даты по умолчанию."""
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS {table_name} (
     заем_выдан_дата DATE,
     выданная_сумма DECIMAL(20,2) CHECK (выданная_сумма >= 0),
     продукт VARCHAR(255) NOT NULL,
-    регион_проживания VARCHAR(255) NOT NULL,
+    регион_проживания VARCHAR(255),
     stat_campaign VARCHAR(255),
     appmetrica VARCHAR(255),
     stat_source VARCHAR(255),

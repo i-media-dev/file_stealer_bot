@@ -14,7 +14,7 @@ async def main():
         api_hash=API_HASH,
         group_id=GROUP_ID,
     )
-    await stealer.run(int(LIFETIME))
+    await stealer.run(LIFETIME)
     parser_client = FileParser()
     data = parser_client.parse_file()
 
