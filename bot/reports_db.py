@@ -2,7 +2,6 @@ import logging
 
 from bot.constants import CREATE_REPORTS_TABLE, INSERT_REPORT, TABLE_NAME
 from bot.decorators import connection_db
-from bot.exceptions import TableNameError
 from bot.logging_config import setup_logging
 
 setup_logging()
@@ -16,28 +15,13 @@ class ReportDataBase():
     def __init__(self, table_name: str = TABLE_NAME):
         self.table_name = table_name
 
-    def _allowed_tables(self, cursor) -> list:
-        """
-        Защищенный метод, возвращает список существующих
-        таблиц в базе данных PostgreSQL.
-        """
-        cursor.execute("""
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'public'
-        """)
-        return [table[0] for table in cursor.fetchall()]
-
     @connection_db
-    def _create_table_if_not_exists(self, cursor=None) -> str:
+    def _create_table(self, cursor=None) -> str:
         """
         Защищенный метод, создает таблицу в базе данных, если ее не существует.
         Если таблица есть в базе данных - возварщает ее имя.
         """
         try:
-            if self.table_name in self._allowed_tables(cursor):
-                logging.info('Таблица %s найдена в базе', self.table_name)
-                return self.table_name
             create_table_query = self.sql_create_request.format(
                 table_name=self.table_name
             )
@@ -67,7 +51,8 @@ class ReportDataBase():
 
     def insert_report(self, data):
         try:
-            table_name = self._create_table_if_not_exists()
+            self._drop_tables()
+            table_name = self._create_table()
             query = INSERT_REPORT.format(table_name=table_name)
             params = [
                 (
@@ -123,22 +108,11 @@ class ReportDataBase():
             )
 
     @connection_db
-    def clean_database(self, cursor=None, **tables: bool) -> None:
-        """
-        Метод очищает базу данных,
-        не удаляя сами таблицы
-        """
+    def _drop_tables(self, cursor=None) -> None:
+        """Удаляет таблицу полностью."""
         try:
-            existing_tables = self._allowed_tables()
-            for table_name, should_clean in tables.items():
-                if should_clean and table_name in existing_tables:
-                    cursor.execute(f'DELETE FROM {table_name}')
-                    logging.info(f'Таблица {table_name} очищена')
-                else:
-                    raise TableNameError(
-                        'В базе данных отсутствует таблица %s.',
-                        table_name
-                    )
+            cursor.execute(f'DROP TABLE IF EXISTS "{self.table_name}" CASCADE')
+            logging.info('Таблица %s полностью удалена', self.table_name)
         except Exception as error:
-            logging.error('Ошибка очистки: %s', error)
+            logging.error('Ошибка удаления таблицы: %s', error)
             raise
