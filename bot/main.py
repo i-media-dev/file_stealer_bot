@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 
-from bot.constants import GROUP_ID, LIFETIME, TOKEN_TELEGRAM
+from bot.constants import GROUP_ID, LIFETIME, TABLE_NAME, TOKEN_TELEGRAM
 from bot.file_parser import FileParser
 from bot.reports_db import ReportDataBase
 from bot.stealer_bot import FileStealer
@@ -25,7 +25,7 @@ def main():
     parser_client = FileParser()
     data = parser_client.parse_file()
 
-    db_client = ReportDataBase()
+    db_client = ReportDataBase(TABLE_NAME)
     query_data = db_client.insert_report(data)
     db_client.save_to_database(query_data)
 

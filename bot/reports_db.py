@@ -1,6 +1,6 @@
 import logging
 
-from bot.constants import CREATE_REPORTS_TABLE, INSERT_REPORT, TABLE_NAME
+from bot.constants import CREATE_REPORTS_TABLE, INSERT_REPORT
 from bot.decorators import connection_db
 from bot.logging_config import setup_logging
 
@@ -12,7 +12,7 @@ class ReportDataBase():
     sql_create_request = CREATE_REPORTS_TABLE
     sql_insert_request = INSERT_REPORT
 
-    def __init__(self, table_name: str = TABLE_NAME):
+    def __init__(self, table_name: str):
         self.table_name = table_name
 
     def _create_table(self, cursor=None) -> None:
