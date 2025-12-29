@@ -3,6 +3,7 @@ import logging
 import random
 from pathlib import Path
 
+import pandas as pd
 from telebot import TeleBot
 from telethon import TelegramClient, events
 
@@ -43,10 +44,21 @@ class FileStealerClient:
                 sender = await event.get_sender()
                 logging.info('Документ от %s', sender.username)
                 folder = self._make_dir(self.folder_name)
-                await event.download_media(file=folder)
+                filename = event.document.attributes[0].file_name
+                file_path = folder / filename
+                if file_path.exists():
+                    file_path.unlink()
+                await event.download_media(file=file_path)
                 logging.info('Файл скачан')
                 random_robot = random.choice(ROBOTS)
                 self._get_robot(random_robot, self.group_id)
+                df = pd.read_csv(file_path, sep=';', encoding='cp1251')
+                df.to_csv(
+                    file_path,
+                    sep=';',
+                    index=False,
+                    encoding='utf-8'
+                )
                 await self.client.disconnect()
 
     def _get_robot(self, robot, chat_id, robot_folder='robot'):
