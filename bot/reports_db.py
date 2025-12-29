@@ -15,8 +15,7 @@ class ReportDataBase():
     def __init__(self, table_name: str = TABLE_NAME):
         self.table_name = table_name
 
-    @connection_db
-    def _create_table(self, cursor=None) -> str:
+    def _create_table(self, cursor=None) -> None:
         """
         Защищенный метод, создает таблицу в базе данных, если ее не существует.
         Если таблица есть в базе данных - возварщает ее имя.
@@ -41,7 +40,6 @@ class ReportDataBase():
             for index_query in indexes:
                 cursor.execute(index_query)
             logging.info('Таблица %s успешно создана', self.table_name)
-            return self.table_name
         except Exception as error:
             logging.error(
                 'Неожиданная ошибка во время создания таблицы: %s',
@@ -51,9 +49,7 @@ class ReportDataBase():
 
     def insert_report(self, data):
         try:
-            self._drop_tables()
-            table_name = self._create_table()
-            query = INSERT_REPORT.format(table_name=table_name)
+            query = INSERT_REPORT.format(table_name=self.table_name)
             params = [
                 (
                     item['number'],
@@ -93,21 +89,25 @@ class ReportDataBase():
         query_data: tuple,
         cursor=None
     ) -> None:
-        """Метод сохраняется обработанные данные в базу данных."""
+        """Метод сохраняет обработанные данные в базу данных."""
         try:
+            self._drop_tables(cursor)
+            self._create_table(cursor)
             query, params = query_data
+
             if isinstance(params, list):
                 cursor.executemany(query, params)
             else:
                 cursor.execute(query, params)
+
             logging.info('✅ Данные успешно сохранены!')
         except Exception as error:
             logging.error(
                 'Неожиданная ошибка при сохранении данных: %s',
                 error
             )
+            raise
 
-    @connection_db
     def _drop_tables(self, cursor=None) -> None:
         """Удаляет таблицу полностью."""
         try:
