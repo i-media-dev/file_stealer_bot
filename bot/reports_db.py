@@ -63,7 +63,7 @@ class ReportDataBase():
                     item['stat_ad_type'],
                     item['stat_system'],
                     item['stat_term'],
-                    item['uf_clb_char'],
+                    item['uf_clb_channel'],
                     item['stat_info'],
                     item['стоимость_тс'],
                     item['марка_тс'],

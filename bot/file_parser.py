@@ -52,7 +52,7 @@ class FileParser:
                         'stat_ad_type': row.get('STAT_AD_TYPE'),
                         'stat_system': row.get('STAT_SYSTEM'),
                         'stat_term': row.get('STAT_TERM'),
-                        'uf_clb_char': row.get('UF_CLB_CHANNEL'),
+                        'uf_clb_channel': row.get('UF_CLB_CHANNEL'),
                         'stat_info': row.get('STAT_INFO'),
                         'стоимость_тс': row.get('Стоимость ТС'),
                         'марка_тс': row.get('Марка тс'),
