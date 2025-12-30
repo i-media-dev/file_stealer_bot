@@ -5,6 +5,7 @@ from bot.decorators import connection_db
 from bot.logging_config import setup_logging
 
 setup_logging()
+logger = logging.getLogger(__name__)
 
 
 class ReportDataBase():
@@ -100,7 +101,7 @@ class ReportDataBase():
             else:
                 cursor.execute(query, params)
 
-            logging.info('✅ Данные успешно сохранены!')
+            logger.bot_event('✅ Данные успешно сохранены!')
         except Exception as error:
             logging.error(
                 'Неожиданная ошибка при сохранении данных: %s',

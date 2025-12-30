@@ -17,14 +17,14 @@ setup_logging()
 def time_of_script(func):
     """Универсальный декоратор для логирования выполнения."""
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs):
         start_ts = time.time()
         date_str = dt.now().strftime(DATE_FORMAT)
         time_str = dt.now().strftime(TIME_FORMAT)
-        print(f'Функция main начала работу {date_str} в {time_str}')
+        print(f'Функция {func.__name__} начала работу {date_str} в {time_str}')
 
         try:
-            result = func(*args, **kwargs)
+            result = await func(*args, **kwargs)  # <-- await тут
             status = 'SUCCESS'
             error_type = error_message = None
         except Exception as error:
@@ -35,7 +35,7 @@ def time_of_script(func):
         exec_time_min = round((time.time() - start_ts) / 60, 2)
         exec_time_sec = round(time.time() - start_ts, 3)
         print(
-            'Функция main завершила '
+            f'Функция {func.__name__} завершила '
             f'работу в {dt.now().strftime(TIME_FORMAT)}.'
             f' Время выполнения - {exec_time_min} мин. '
         )

@@ -2,11 +2,13 @@ import asyncio
 
 from bot.constants import (API_HASH, API_ID, GROUP_ID, LIFETIME, TABLE_NAME,
                            TOKEN_TELEGRAM)
+from bot.decorators import time_of_script
 from bot.file_parser import FileParser
 from bot.reports_db import ReportDataBase
 from bot.stealer_client import FileStealerClient
 
 
+@time_of_script
 async def main():
     token = TOKEN_TELEGRAM
     stealer = FileStealerClient(
