@@ -51,7 +51,10 @@ class FileStealerClient:
                 await event.download_media(file=file_path)
                 logging.info('Файл скачан')
                 random_robot = random.choice(ROBOTS)
-                self._get_robot(random_robot, self.group_id)
+                try:
+                    self._get_robot(random_robot, self.group_id)
+                except Exception as error:
+                    logging.error('Не удалось отправить стикер: %s', error)
                 df = pd.read_csv(file_path, sep=',', encoding='cp1251')
                 df.to_csv(
                     file_path,
