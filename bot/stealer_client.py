@@ -1,13 +1,14 @@
 import asyncio
 import logging
 import random
+import time
 from pathlib import Path
 
 import pandas as pd
 from telebot import TeleBot
 from telethon import TelegramClient, events
 
-from bot.constants import FOLDER_NAME, ROBOTS
+from bot.constants import FOLDER_NAME, ROBOTS, SEND_MESSAGE_RETRIES
 from bot.logging_config import setup_logging
 
 setup_logging()
@@ -65,11 +66,21 @@ class FileStealerClient:
                 await self.client.disconnect()
 
     def _get_robot(self, robot, chat_id, robot_folder='robot'):
-        try:
-            with open(f'{robot_folder}/{robot}', 'rb') as photo:
-                self.bot.send_sticker(chat_id, photo)
-        except FileNotFoundError:
-            logging.warning('Робот %s не найден', robot)
+        retries = SEND_MESSAGE_RETRIES
+
+        for attempt in range(1, retries + 1):
+            try:
+                with open(f'{robot_folder}/{robot}', 'rb') as photo:
+                    self.bot.send_sticker(chat_id, photo, timeout=20)
+                return
+            except FileNotFoundError:
+                logging.warning('Робот %s не найден', robot)
+                return
+            except Exception as error:
+                logging.error('Неожиданная ошибка: %s', error)
+                if attempt == retries:
+                    raise
+                time.sleep(2)
 
     def _make_dir(self, folder_name: str) -> Path:
         path = Path(folder_name)
