@@ -71,7 +71,7 @@ class FileStealerClient:
         for attempt in range(1, retries + 1):
             try:
                 with open(f'{robot_folder}/{robot}', 'rb') as photo:
-                    self.bot.send_sticker(chat_id, photo, timeout=20)
+                    self.bot.send_sticker(chat_id, photo, timeout=60)
                 return
             except FileNotFoundError:
                 logging.warning('Робот %s не найден', robot)
