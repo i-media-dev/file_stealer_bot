@@ -17,45 +17,47 @@ setup_logging()
 def time_of_script(func):
     """Универсальный декоратор для логирования выполнения."""
     @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         start_ts = time.time()
         date_str = dt.now().strftime(DATE_FORMAT)
-        time_str = dt.now().strftime(TIME_FORMAT)
-        print(f'Функция {func.__name__} начала работу {date_str} в {time_str}')
 
-        try:
-            result = await func(*args, **kwargs)  # <-- await тут
-            status = 'SUCCESS'
-            error_type = error_message = None
-        except Exception as error:
-            status = 'ERROR'
-            error_type, error_message = type(error).__name__, str(error)
-            result = None
-
-        exec_time_min = round((time.time() - start_ts) / 60, 2)
-        exec_time_sec = round(time.time() - start_ts, 3)
         print(
-            f'Функция {func.__name__} завершила '
-            f'работу в {dt.now().strftime(TIME_FORMAT)}.'
-            f' Время выполнения - {exec_time_min} мин. '
+            f'Функция {func.__name__} начала работу '
+            f'{date_str} в {dt.now().strftime(TIME_FORMAT)}'
         )
 
-        log_record = {
-            "DATE": date_str,
-            "STATUS": status,
-            "FUNCTION_NAME": func.__name__,
-            "EXECUTION_TIME": exec_time_sec,
-            "ERROR_TYPE": error_type,
-            "ERROR_MESSAGE": error_message,
-            "ENDLOGGING": 1
-        }
+        status = 'SUCCESS'
+        error_type = error_message = None
 
-        logging.info(json.dumps(log_record, ensure_ascii=False))
+        try:
+            return func(*args, **kwargs)
 
-        if status == "ERROR":
+        except Exception as error:
+            status = 'ERROR'
+            error_type = type(error).__name__
+            error_message = str(error)
             raise
 
-        return result
+        finally:
+            exec_time_sec = round(time.time() - start_ts, 3)
+
+            print(
+                f'Функция {func.__name__} завершила работу '
+                f'в {dt.now().strftime(TIME_FORMAT)}. '
+                f'Время выполнения — {round(exec_time_sec / 60, 2)} мин.'
+            )
+
+            log_record = {
+                "DATE": date_str,
+                "STATUS": status,
+                "FUNCTION_NAME": func.__name__,
+                "EXECUTION_TIME": exec_time_sec,
+                "ERROR_TYPE": error_type,
+                "ERROR_MESSAGE": error_message,
+                "ENDLOGGING": 1
+            }
+
+            logging.info(json.dumps(log_record, ensure_ascii=False))
 
     return wrapper
 
