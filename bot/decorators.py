@@ -17,7 +17,7 @@ setup_logging()
 def time_of_script(func):
     """Универсальный декоратор для логирования выполнения."""
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs):
         start_ts = time.time()
         date_str = dt.now().strftime(DATE_FORMAT)
 
@@ -30,7 +30,7 @@ def time_of_script(func):
         error_type = error_message = None
 
         try:
-            return func(*args, **kwargs)
+            return await func(*args, **kwargs)
 
         except Exception as error:
             status = 'ERROR'
